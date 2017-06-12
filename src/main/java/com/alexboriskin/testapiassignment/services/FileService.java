@@ -2,6 +2,8 @@ package com.alexboriskin.testapiassignment.services;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.alexboriskin.testapiassignment.models.File;
 
 public interface FileService {
@@ -19,5 +21,7 @@ public interface FileService {
     public void deleteById(long id);
 
     public void deleteByName(String name);
+
+    public File processUploadedFile(MultipartFile file);
 
 }
