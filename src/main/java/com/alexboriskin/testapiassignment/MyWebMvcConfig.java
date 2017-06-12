@@ -16,7 +16,7 @@ public class MyWebMvcConfig {
             @Override
             public void addViewControllers(ViewControllerRegistry registry) {
                 registry.addViewController("/").setViewName(
-                        "forward:/FileUpload.html");
+                        "forward:/files/upload");
             }
         };
     }

@@ -33,6 +33,11 @@ public class FileController {
     public File getFile(@PathVariable Long id) {
         return fileService.getById(id);
     }
+    
+    @GetMapping("/files/upload")
+    public String uploadFile() {
+        return "FileUpload";
+    }
 
     @PostMapping("/files/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
