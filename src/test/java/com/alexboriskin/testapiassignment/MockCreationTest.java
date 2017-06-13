@@ -19,8 +19,6 @@ public class MockCreationTest {
 
     @Mock
     private FileDao fileDao;
-    @Mock
-    private File file;
 
     @Before
     public void setupMock() {
@@ -29,7 +27,6 @@ public class MockCreationTest {
 
     @Test
     public void testMockCreation() {
-        assertNotNull(file);
         assertNotNull(fileDao);
     }
 
