@@ -1,8 +1,13 @@
 package com.alexboriskin.testapiassignment.controllers;
 
+import java.net.URI;
 import java.util.List;
 
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,7 +44,7 @@ public class FileController {
     }
     
     @PutMapping("/files/{id}")
-    public ResponseEntity<File> updateFile(@PathVariable Long id,  @RequestBody File file) {
+    public ResponseEntity<File> updateFile(@PathVariable Long id,  @RequestBody File file, @Context UriInfo uriInfo) {
         if (file == null) {
             return new ResponseEntity<File>(HttpStatus.NOT_FOUND);
         }
@@ -47,8 +52,10 @@ public class FileController {
         file.setId(id);
         fileService.update(file);
         
-
-        return new ResponseEntity<File>(file, HttpStatus.OK);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        URI location = URI.create(getUriForSelf( uriInfo,  file));
+        responseHeaders.setLocation(location);
+        return new ResponseEntity<File>(file, responseHeaders, HttpStatus.OK);
     }
     
     @GetMapping("/files/upload")
@@ -78,6 +85,15 @@ public class FileController {
     @DeleteMapping("/files/{id}")
     public void deleteFile(@PathVariable Long id) {
         fileService.deleteById(id);
+    }
+    
+    private String getUriForSelf(UriInfo uriInfo, File file) {
+        String uri = uriInfo.getBaseUriBuilder()
+                .path(FileController.class)
+                .path(Long.toString(file.getId()))
+                .build()
+                .toString();
+        return uri;
     }
 
 }
