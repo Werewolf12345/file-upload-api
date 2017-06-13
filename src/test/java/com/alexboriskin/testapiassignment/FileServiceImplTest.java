@@ -35,11 +35,11 @@ public class FileServiceImplTest {
 
     private FileServiceImpl fileServiceImpl = new FileServiceImpl();
     private File file1 = new File("file1.properties", new Date(), null);
-    private MetaData metaData1 = new MetaData(file1, "metaData11", "metaData12", "metaData13");
+    private MetaData metaData1 = new MetaData("metaData11", "metaData12", "metaData13");
     private File file2 = new File("file2.properties", new Date(), null);
-    private MetaData metaData2 = new MetaData(file2, "metaData21", "metaData22", "metaData23");
+    private MetaData metaData2 = new MetaData("metaData21", "metaData22", "metaData23");
     private File file3 = new File("file3.properties", new Date(), null);
-    private MetaData metaData3 = new MetaData(file3, "metaData31", "metaData32", "metaData33");
+    private MetaData metaData3 = new MetaData("metaData31", "metaData32", "metaData33");
 
     @Before
     public void setupMock() {
@@ -81,7 +81,7 @@ public class FileServiceImplTest {
         assertNotNull(file);
         assertEquals(file1.getFileName(), file.getFileName());
         assertEquals(file1.getId(), file.getId());
-        
+
         file = fileServiceImpl.getByName("nonExistingName");
         assertNull(file);
     }
@@ -102,18 +102,17 @@ public class FileServiceImplTest {
     public void testDeleteByNameExistingFile() {
         List<File> database = Arrays.asList(file1, file2, file3);
         when(fileDao.getAll()).thenReturn(database);
-        
+
         fileServiceImpl.deleteByName("file1.properties");
         verify(fileDao).delete(1);
-        
-       
+
     }
-    
+
     @Test
     public void testDeleteByNameNonExistingFile() {
         List<File> database = Arrays.asList(file1, file2, file3);
         when(fileDao.getAll()).thenReturn(database);
-        
+
         fileServiceImpl.deleteByName("nonExistingName");
         verify(fileDao, never()).delete(anyLong());
     }

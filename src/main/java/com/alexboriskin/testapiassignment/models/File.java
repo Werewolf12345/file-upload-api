@@ -16,8 +16,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "files")
 public class File implements Serializable {
@@ -64,8 +62,7 @@ public class File implements Serializable {
         this.uploaded = uploaded;
     }
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = "metadata_id")
     public MetaData getMetaData() {

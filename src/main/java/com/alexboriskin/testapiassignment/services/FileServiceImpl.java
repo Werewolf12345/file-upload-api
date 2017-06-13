@@ -49,22 +49,19 @@ public class FileServiceImpl implements FileService {
     public File getByName(String name) {
         List<File> database = getAll();
 
-        return database.stream().filter(t -> t.getFileName().equals(name))
-                .findAny().orElse(null);
+        return database.stream().filter(t -> t.getFileName().equals(name)).findAny().orElse(null);
     }
 
     @Override
     @Transactional
     public void update(File file) {
         fileDao.update(file);
-
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         fileDao.delete(id);
-
     }
 
     @Override
@@ -72,9 +69,7 @@ public class FileServiceImpl implements FileService {
     public void deleteByName(String name) {
         List<File> database = getAll();
 
-        File fileToDelete = database.stream()
-                .filter(t -> t.getFileName().equals(name)).findAny()
-                .orElse(null);
+        File fileToDelete = database.stream().filter(t -> t.getFileName().equals(name)).findAny().orElse(null);
         if (fileToDelete != null) {
             fileDao.delete(fileToDelete.getId());
         }
@@ -94,10 +89,8 @@ public class FileServiceImpl implements FileService {
             String metaData2 = properties.getProperty("metaData2");
             String metaData3 = properties.getProperty("metaData3");
 
-            uploadedFile = new File(file.getOriginalFilename(), new Date(),
-                    null);
-            MetaData metaData = new MetaData(uploadedFile, metaData1,
-                    metaData2, metaData3);
+            uploadedFile = new File(file.getOriginalFilename(), new Date(), null);
+            MetaData metaData = new MetaData(metaData1, metaData2, metaData3);
             uploadedFile.setMetaData(metaData);
 
             saveNew(uploadedFile);

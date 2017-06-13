@@ -29,11 +29,15 @@ public class FileDaoImpl implements FileDao {
 
     @Override
     public File get(long id) {
-        return entityManager.find(File.class, id);
+        File file = entityManager.find(File.class, id);
+        //Hibernate.initialize(file.getMetaData());
+        return file;
     }
 
     @Override
     public void update(File file) {
+        System.out.println(file.getFileName());
+
         entityManager.merge(file);
     }
 
