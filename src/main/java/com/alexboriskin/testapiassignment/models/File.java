@@ -1,6 +1,5 @@
 package com.alexboriskin.testapiassignment.models;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,13 +14,17 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.hateoas.ResourceSupport;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 @Entity
 @Table(name = "files")
-public class File implements Serializable {
+public class File extends ResourceSupport {
    
-    private static final long serialVersionUID = 3378261838741877859L;
-    private long id;
+    private long fileId;
     private String fileName;
     private Date uploaded;
     private MetaData metaData;
@@ -38,12 +41,12 @@ public class File implements Serializable {
     @Id
     @Column(name = "file_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long getId() {
-        return id;
+    public long getFileId() {
+        return fileId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setFileId(long id) {
+        this.fileId = id;
     }
 
     public String getFileName() {

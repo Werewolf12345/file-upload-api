@@ -46,11 +46,11 @@ public class FileServiceImplTest {
         MockitoAnnotations.initMocks(this);
         fileServiceImpl.setFileDao(fileDao);
         file1.setMetaData(metaData1);
-        file1.setId(1);
+        file1.setFileId(1);
         file2.setMetaData(metaData2);
-        file2.setId(2);
+        file2.setFileId(2);
         file3.setMetaData(metaData3);
-        file3.setId(3);
+        file3.setFileId(3);
     }
 
     @Test

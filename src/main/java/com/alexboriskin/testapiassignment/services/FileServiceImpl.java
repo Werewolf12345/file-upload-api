@@ -71,7 +71,7 @@ public class FileServiceImpl implements FileService {
 
         File fileToDelete = database.stream().filter(t -> t.getFileName().equals(name)).findAny().orElse(null);
         if (fileToDelete != null) {
-            fileDao.delete(fileToDelete.getId());
+            fileDao.delete(fileToDelete.getFileId());
         }
 
     }

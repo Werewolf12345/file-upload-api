@@ -1,13 +1,13 @@
 package com.alexboriskin.testapiassignment.controllers;
 
-import java.net.URI;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.util.List;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,42 +39,47 @@ public class FileController {
 
     @GetMapping("/files/{id}")
     @ResponseBody
-    public File getFile(@PathVariable Long id) {
-        return fileService.getById(id);
-    }
-    
-    @PutMapping("/files/{id}")
-    public ResponseEntity<File> updateFile(@PathVariable Long id,  @RequestBody File file, @Context UriInfo uriInfo) {
+    public HttpEntity<File> getFile(@PathVariable Long id) {
+        File file = fileService.getById(id);
+
         if (file == null) {
             return new ResponseEntity<File>(HttpStatus.NOT_FOUND);
         }
-        
-        file.setId(id);
-        fileService.update(file);
-        
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI location = URI.create(getUriForSelf( uriInfo,  file));
-        responseHeaders.setLocation(location);
-        return new ResponseEntity<File>(file, responseHeaders, HttpStatus.OK);
+
+        Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
+        file.add(selfLink);
+
+        return new ResponseEntity<File>(file, HttpStatus.OK);
     }
-    
+
+    @PutMapping("/files/{id}")
+    public HttpEntity<File> updateFile(@PathVariable Long id, @RequestBody File file) {
+        if (file == null) {
+            return new ResponseEntity<File>(HttpStatus.NOT_FOUND);
+        }
+
+        file.setFileId(id);
+        fileService.update(file);
+
+        Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
+        file.add(selfLink);
+
+        return new ResponseEntity<File>(file, HttpStatus.OK);
+    }
+
     @GetMapping("/files/upload")
     public String uploadFile() {
         return "FileUpload";
     }
 
     @PostMapping("/files/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-            RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
         File uploadedFile = fileService.processUploadedFile(file);
 
         if (uploadedFile != null) {
-            redirectAttributes.addAttribute("id", uploadedFile.getId())
-                    .addFlashAttribute(
-                            "message",
-                            "You successfully uploaded "
-                                    + file.getOriginalFilename() + "!");
+            redirectAttributes.addAttribute("id", uploadedFile.getFileId()).addFlashAttribute("message",
+                    "You successfully uploaded " + file.getOriginalFilename() + "!");
 
             return "redirect:/files/{id}";
         } else {
@@ -83,17 +88,14 @@ public class FileController {
     }
 
     @DeleteMapping("/files/{id}")
-    public void deleteFile(@PathVariable Long id) {
+    public HttpEntity<File> deleteFile(@PathVariable Long id) {
+        File file = fileService.getById(id);
+
+        if (file == null) {
+            return new ResponseEntity<File>(HttpStatus.NOT_FOUND);
+        }
         fileService.deleteById(id);
-    }
-    
-    private String getUriForSelf(UriInfo uriInfo, File file) {
-        String uri = uriInfo.getBaseUriBuilder()
-                .path(FileController.class)
-                .path(Long.toString(file.getId()))
-                .build()
-                .toString();
-        return uri;
+        return new ResponseEntity<File>(HttpStatus.NO_CONTENT);
     }
 
 }
