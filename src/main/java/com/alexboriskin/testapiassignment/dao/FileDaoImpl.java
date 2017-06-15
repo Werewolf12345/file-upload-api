@@ -15,10 +15,20 @@ public class FileDaoImpl implements FileDao {
     @PersistenceContext
     private EntityManager entityManager;
     
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<File> getAll() {
-    String hql = "FROM File as files ORDER BY files.id";
+    String hql = "FROM File as files ORDER BY files.fileId";
     return (List<File>) entityManager.createQuery(hql).getResultList();
     }
 
@@ -30,7 +40,6 @@ public class FileDaoImpl implements FileDao {
     @Override
     public File get(long id) {
         File file = entityManager.find(File.class, id);
-        //Hibernate.initialize(file.getMetaData());
         return file;
     }
 

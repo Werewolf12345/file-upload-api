@@ -21,10 +21,12 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private FileDao fileDao;
 
+    @Override
     public FileDao getFileDao() {
         return fileDao;
     }
 
+    @Override
     public void setFileDao(FileDao fileDao) {
         this.fileDao = fileDao;
     }

@@ -19,21 +19,29 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alexboriskin.testapiassignment.dao.FileDao;
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.models.MetaData;
-import com.alexboriskin.testapiassignment.services.FileServiceImpl;
+import com.alexboriskin.testapiassignment.services.FileService;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class FileServiceImplTest {
 
     @Mock
     private FileDao fileDao;
 
-    private FileServiceImpl fileServiceImpl = new FileServiceImpl();
+    @Autowired
+    private FileService fileService;
+    
     private File file1 = new File("file1.properties", new Date(), null);
     private MetaData metaData1 = new MetaData("metaData11", "metaData12", "metaData13");
     private File file2 = new File("file2.properties", new Date(), null);
@@ -44,7 +52,7 @@ public class FileServiceImplTest {
     @Before
     public void setupMock() {
         MockitoAnnotations.initMocks(this);
-        fileServiceImpl.setFileDao(fileDao);
+        fileService.setFileDao(fileDao);
         file1.setMetaData(metaData1);
         file1.setFileId(1);
         file2.setMetaData(metaData2);
@@ -55,20 +63,20 @@ public class FileServiceImplTest {
 
     @Test
     public void testSaveNew() {
-        fileServiceImpl.saveNew(file1);
+        fileService.saveNew(file1);
         verify(fileDao).save(file1);
     }
 
     @Test
     public void testGetAll() {
-        fileServiceImpl.getAll();
+        fileService.getAll();
         verify(fileDao).getAll();
     }
 
     @Test
     public void testGetById() {
         when(fileDao.get(1)).thenReturn(file1);
-        assertEquals(file1, fileServiceImpl.getById(1));
+        assertEquals(file1, fileService.getById(1));
 
     }
 
@@ -77,24 +85,24 @@ public class FileServiceImplTest {
         List<File> database = Arrays.asList(file1, file2, file3);
         when(fileDao.getAll()).thenReturn(database);
 
-        File file = fileServiceImpl.getByName("file1.properties");
+        File file = fileService.getByName("file1.properties");
         assertNotNull(file);
         assertEquals(file1.getFileName(), file.getFileName());
         assertEquals(file1.getId(), file.getId());
 
-        file = fileServiceImpl.getByName("nonExistingName");
+        file = fileService.getByName("nonExistingName");
         assertNull(file);
     }
 
     @Test
     public void testUpdate() {
-        fileServiceImpl.update(file1);
+        fileService.update(file1);
         verify(fileDao).update(file1);
     }
 
     @Test
     public void testDeleteById() {
-        fileServiceImpl.deleteById(1);
+        fileService.deleteById(1);
         verify(fileDao).delete(1);
     }
 
@@ -103,7 +111,7 @@ public class FileServiceImplTest {
         List<File> database = Arrays.asList(file1, file2, file3);
         when(fileDao.getAll()).thenReturn(database);
 
-        fileServiceImpl.deleteByName("file1.properties");
+        fileService.deleteByName("file1.properties");
         verify(fileDao).delete(1);
 
     }
@@ -113,7 +121,7 @@ public class FileServiceImplTest {
         List<File> database = Arrays.asList(file1, file2, file3);
         when(fileDao.getAll()).thenReturn(database);
 
-        fileServiceImpl.deleteByName("nonExistingName");
+        fileService.deleteByName("nonExistingName");
         verify(fileDao, never()).delete(anyLong());
     }
 
@@ -126,7 +134,7 @@ public class FileServiceImplTest {
             MultipartFile multipartFile = mock(MultipartFile.class);
 
             when(multipartFile.getInputStream()).thenReturn(stubInputStream);
-            File file = fileServiceImpl.processUploadedFile(multipartFile);
+            File file = fileService.processUploadedFile(multipartFile);
             assertEquals("test1", file.getMetaData().getMetaData1());
             assertEquals("test2", file.getMetaData().getMetaData2());
             assertEquals("test3", file.getMetaData().getMetaData3());
