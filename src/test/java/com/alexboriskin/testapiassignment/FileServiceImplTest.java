@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class FileServiceImplTest {
     private FileDao fileDao;
 
     @Autowired
+    @InjectMocks
     private FileService fileService;
     
     private File file1 = new File("file1.properties", new Date(), null);
@@ -52,7 +54,7 @@ public class FileServiceImplTest {
     @Before
     public void setupMock() {
         MockitoAnnotations.initMocks(this);
-        fileService.setFileDao(fileDao);
+        
         file1.setMetaData(metaData1);
         file1.setFileId(1);
         file2.setMetaData(metaData2);

@@ -89,7 +89,8 @@ public class FileController {
         File uploadedFile = fileService.processUploadedFile(file);
 
         if (uploadedFile != null) {
-            redirectAttributes.addAttribute("id", uploadedFile.getFileId()).addFlashAttribute("message",
+            redirectAttributes.addAttribute("id", uploadedFile.getFileId())
+                              .addFlashAttribute("message",
                     "You successfully uploaded " + file.getOriginalFilename() + "!");
 
             return "redirect:/files/{id}";
