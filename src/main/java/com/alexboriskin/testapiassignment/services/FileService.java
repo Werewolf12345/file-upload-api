@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alexboriskin.testapiassignment.dao.FileDao;
 import com.alexboriskin.testapiassignment.models.File;
 
 public interface FileService {
@@ -24,9 +23,5 @@ public interface FileService {
     public void deleteByName(String name);
 
     public File processUploadedFile(MultipartFile file);
-
-    public void setFileDao(FileDao fileDao);
-    
-    public FileDao getFileDao();
-
+   
 }

@@ -2,6 +2,7 @@ package com.alexboriskin.testapiassignment.services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alexboriskin.testapiassignment.dao.FileDao;
+import com.alexboriskin.testapiassignment.dao.FileRepository;
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.models.MetaData;
 
@@ -19,51 +20,50 @@ import com.alexboriskin.testapiassignment.models.MetaData;
 public class FileServiceImpl implements FileService {
 
     @Autowired
-    private FileDao fileDao;
-
-    @Override
-    public FileDao getFileDao() {
-        return fileDao;
-    }
-
-    @Override
-    public void setFileDao(FileDao fileDao) {
-        this.fileDao = fileDao;
-    }
+    private FileRepository fileRepository;
 
     @Override
     @Transactional
     public void saveNew(File file) {
-        fileDao.save(file);
+        fileRepository.save(file);
     }
 
     @Override
     public List<File> getAll() {
-        return fileDao.getAll();
+        List<File> allFilesList = new ArrayList<>();
+        
+        fileRepository
+        .findAll()
+        .forEach(allFilesList::add);
+        
+        return allFilesList;
     }
 
     @Override
     public File getById(long id) {
-        return fileDao.get(id);
+        return fileRepository.findOne(id);
     }
 
     @Override
     public File getByName(String name) {
         List<File> database = getAll();
 
-        return database.stream().filter(t -> t.getFileName().equals(name)).findAny().orElse(null);
+        return database.stream()
+                       .filter(t -> t.getFileName().equals(name))
+                       .findAny()
+                       .orElse(null);
     }
 
     @Override
     @Transactional
     public void update(File file) {
-        fileDao.update(file);
+        fileRepository.save(file);
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
-        fileDao.delete(id);
+        fileRepository.delete(id);
     }
 
     @Override
@@ -71,11 +71,14 @@ public class FileServiceImpl implements FileService {
     public void deleteByName(String name) {
         List<File> database = getAll();
 
-        File fileToDelete = database.stream().filter(t -> t.getFileName().equals(name)).findAny().orElse(null);
+        File fileToDelete = database.stream()
+                                    .filter(t -> t.getFileName().equals(name))
+                                    .findAny()
+                                    .orElse(null);
+        
         if (fileToDelete != null) {
-            fileDao.delete(fileToDelete.getFileId());
+            fileRepository.delete(fileToDelete.getFileId());
         }
-
     }
 
     @Override

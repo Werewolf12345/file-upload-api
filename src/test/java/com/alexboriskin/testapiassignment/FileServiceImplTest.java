@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -23,26 +24,25 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alexboriskin.testapiassignment.dao.FileDao;
+import com.alexboriskin.testapiassignment.dao.FileRepository;
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.models.MetaData;
 import com.alexboriskin.testapiassignment.services.FileService;
+import com.alexboriskin.testapiassignment.services.FileServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class FileServiceImplTest {
 
     @Mock
-    private FileDao fileDao;
-
-    @Autowired
+    private FileRepository fileRepository;
+   
     @InjectMocks
-    private FileService fileService;
+    private FileService fileService = new FileServiceImpl();
     
     private File file1 = new File("file1.properties", new Date(), null);
     private MetaData metaData1 = new MetaData("metaData11", "metaData12", "metaData13");
@@ -56,36 +56,38 @@ public class FileServiceImplTest {
         MockitoAnnotations.initMocks(this);
         
         file1.setMetaData(metaData1);
-        file1.setFileId(1);
+        file1.setFileId(1L);
         file2.setMetaData(metaData2);
-        file2.setFileId(2);
+        file2.setFileId(2L);
         file3.setMetaData(metaData3);
-        file3.setFileId(3);
+        file3.setFileId(3L);
     }
 
     @Test
     public void testSaveNew() {
         fileService.saveNew(file1);
-        verify(fileDao).save(file1);
+        verify(fileRepository).save(file1);
     }
 
     @Test
     public void testGetAll() {
+        List<File> database = Arrays.asList(file1, file2, file3);
+        when(fileRepository.findAll()).thenReturn(database);
         fileService.getAll();
-        verify(fileDao).getAll();
+        verify(fileRepository).findAll();
     }
 
     @Test
     public void testGetById() {
-        when(fileDao.get(1)).thenReturn(file1);
-        assertEquals(file1, fileService.getById(1));
+        when(fileRepository.findOne(1L)).thenReturn(file1);
+        assertEquals(file1, fileService.getById(1L));
 
     }
 
     @Test
     public void testGetByName() {
         List<File> database = Arrays.asList(file1, file2, file3);
-        when(fileDao.getAll()).thenReturn(database);
+        when(fileRepository.findAll()).thenReturn(database);
 
         File file = fileService.getByName("file1.properties");
         assertNotNull(file);
@@ -99,32 +101,32 @@ public class FileServiceImplTest {
     @Test
     public void testUpdate() {
         fileService.update(file1);
-        verify(fileDao).update(file1);
+        verify(fileRepository).save(file1);
     }
 
     @Test
     public void testDeleteById() {
-        fileService.deleteById(1);
-        verify(fileDao).delete(1);
+        fileService.deleteById(1L);
+        verify(fileRepository).delete(1L);
     }
 
     @Test
     public void testDeleteByNameExistingFile() {
         List<File> database = Arrays.asList(file1, file2, file3);
-        when(fileDao.getAll()).thenReturn(database);
+        when(fileRepository.findAll()).thenReturn(database);
 
         fileService.deleteByName("file1.properties");
-        verify(fileDao).delete(1);
+        verify(fileRepository).delete(1L);
 
     }
 
     @Test
     public void testDeleteByNameNonExistingFile() {
-        List<File> database = Arrays.asList(file1, file2, file3);
-        when(fileDao.getAll()).thenReturn(database);
+        List<File> database = new ArrayList<>(Arrays.asList(file1, file2, file3));
+        when(fileRepository.findAll()).thenReturn(database);
 
         fileService.deleteByName("nonExistingName");
-        verify(fileDao, never()).delete(anyLong());
+        verify(fileRepository, never()).delete(anyLong());
     }
 
     @Test

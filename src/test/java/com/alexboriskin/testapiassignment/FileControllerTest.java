@@ -41,8 +41,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebMvcTest(FileController.class)
 public class FileControllerTest {
     
-    private final long EXISTING_ID = 1;
-    private final long NON_EXISTING_ID = 2;
+    private final long EXISTING_ID = 1L;
+    private final long NON_EXISTING_ID = 2L;
 
     private MetaData metaData1 = new MetaData("metaData11", "metaData12", "metaData13");
     private File file1 = new File("file1.properties", new Date(), metaData1);
