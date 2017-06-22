@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" media="all" />
 <title>File upload</title>
 </head>
 <body>
+<p th:text="'Hello, ' + ${name} + '!'" />
 	<form action="files/upload" enctype="multipart/form-data" method="post">
 		<p>
 			Select a file : <input name="file" size="45" type="file" />

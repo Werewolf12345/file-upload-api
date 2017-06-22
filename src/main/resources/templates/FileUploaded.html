@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"
+	media="all" />
+<title>File uploaded</title>
+</head>
+<body>
+
+	<table>
+		<tbody>
+			<tr>
+				<td>File ID</td>
+				<td th:text="${fileId}">fileId</td>
+			</tr>
+			<tr>
+				<td>File Name</td>
+				<td th:text="${fileName}">filename</td>
+			</tr>
+			<tr>
+				<td>Upload Date</td>
+				<td th:text="${uploaded}">date</td>
+			</tr>
+			<tr>
+				<td>MetaData</td>
+			</tr>
+			<tr>
+				<td>MetaData ID</td>
+				<td th:text="${metaDataId}">ID</td>
+			</tr>
+			<tr>
+				<td>MetaData 1</td>
+				<td th:text="${metaData1}">metaData1</td>
+			</tr>
+			<tr>
+				<td>MetaData 2</td>
+				<td th:text="${metaData2}">metaData2</td>
+			</tr>
+			<tr>
+				<td>MetaData 3</td>
+				<td th:text="${metaData3}">metaData3</td>
+			</tr>
+			<tr>
+				<td>RESTful Links</td>
+			</tr>
+			<tr>
+				<td>Self</td>
+			</tr>
+			<tr>
+				<td>href</td>
+				<td><a href="files/33" th:href="${selfLink}" th:text="${selfLink}">http://localhost:8080/files/XX</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.services.FileService;
 
 @Controller
-@RequestMapping(value = "/files", produces={"application/xml", "application/json"})
+@RequestMapping(value = "/files")
 public class FileController {
 
     @Autowired
@@ -65,7 +66,7 @@ public class FileController {
         }
     }
 
-    @GetMapping("/{id:[\\d]+}")
+    @GetMapping(value = "/{id:[\\d]+}", produces={"application/xml", "application/json"})
     @ResponseBody
     public HttpEntity<File> getFile(@PathVariable Long id) {
         File file = fileService.getById(id);
@@ -78,6 +79,27 @@ public class FileController {
         file.add(selfLink);
 
         return new ResponseEntity<File>(file, HttpStatus.OK);
+    }
+    
+    @SuppressWarnings("deprecation")
+    @GetMapping(value = "/{id:[\\d]+}", produces="text/html")
+    public String getFileHtml(@PathVariable Long id,  Model model) {
+        File file = fileService.getById(id);
+        
+        if (file != null) {
+            Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
+            file.add(selfLink);
+            model.addAttribute("fileId", file.getFileId());
+            model.addAttribute("fileName", file.getFileName());
+            model.addAttribute("uploaded", file.getUploaded().toGMTString());
+            model.addAttribute("metaDataId", file.getMetaData().getId());
+            model.addAttribute("metaData1", file.getMetaData().getMetaData1());
+            model.addAttribute("metaData2", file.getMetaData().getMetaData2());
+            model.addAttribute("metaData3", file.getMetaData().getMetaData3());
+            model.addAttribute("selfLink", file.getId().getHref());
+        }
+        
+        return "FileUploaded";
     }
     
     @PutMapping("/{id:[\\d]+}")
@@ -97,7 +119,8 @@ public class FileController {
     }
 
     @GetMapping("/upload")
-    public String uploadFile() {
+    public String uploadFile(Model model) {
+        model.addAttribute("name", "Alex");
         return "FileUpload";
     }
 

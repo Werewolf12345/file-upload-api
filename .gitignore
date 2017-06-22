@@ -14,3 +14,5 @@ buildNumber.properties
 /.project
 /mvnw
 /mvnw.cmd
+/.mvn/
+/.settings/
