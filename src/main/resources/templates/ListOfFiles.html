@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"
+	media="all" />
+<title>List of Files in DB</title>
+</head>
+<body>
+
+	<table>
+		<tbody>
+
+			<tr>
+				<td>File ID</td>
+				<td>File Name</td>
+				<td>Upload Date</td>
+				<td>RESTful Link</td>
+			</tr>
+
+
+			<tr th:each="file : ${fileList}">
+				<td th:text="${file.fileId}">fileId</td>
+				<td th:text="${file.fileName}">filename</td>
+				<td th:text="${#dates.format(file.uploaded, 'dd-MMM-yyyy')}">dd-MMM-yyyy</td>
+				<td><a th:href="${file.id.href}"
+					href="http://localhost:8080/files/XX" 
+					th:text="${file.id.href}">http://localhost:8080/files/XX</a></td>
+			</tr>
+
+		</tbody>
+	</table>
+	
+	<p>
+      <a href="../" th:href="@{/}">Return to home</a>
+    </p>
+
+</body>
+</html>

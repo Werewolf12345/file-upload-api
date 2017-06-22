@@ -4,12 +4,15 @@
 <meta charset="UTF-8" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"
 	media="all" />
-<title>File uploaded</title>
+<title th:text="'File with ID: ' + ${fileId}">File with ID: XX</title>
 </head>
 <body>
 
 	<table>
 		<tbody>
+			<tr>
+				<td>File</td>
+			</tr>
 			<tr>
 				<td>File ID</td>
 				<td th:text="${fileId}">fileId</td>
@@ -20,7 +23,7 @@
 			</tr>
 			<tr>
 				<td>Upload Date</td>
-				<td th:text="${uploaded}">date</td>
+				<td th:text="${#dates.format(uploaded, 'dd-MMM-yyyy')}">date</td>
 			</tr>
 			<tr>
 				<td>MetaData</td>
@@ -42,17 +45,18 @@
 				<td th:text="${metaData3}">metaData3</td>
 			</tr>
 			<tr>
-				<td>RESTful Links</td>
+				<td>RESTful Link</td>
+				<td><a href="files/33" th:href="${selfLink}"
+					th:text="${selfLink}">http://localhost:8080/files/XX</a></td>
 			</tr>
-			<tr>
-				<td>Self</td>
-			</tr>
-			<tr>
-				<td>href</td>
-				<td><a href="files/33" th:href="${selfLink}" th:text="${selfLink}">http://localhost:8080/files/XX</a></td>
-			</tr>
+
 		</tbody>
 	</table>
-
+	<p>
+		<a href="../files" th:href="@{/files}">See list of all Files in DB</a>
+	</p>
+	<p>
+		<a href="../" th:href="@{/}">Home</a>
+	</p>
 </body>
 </html>

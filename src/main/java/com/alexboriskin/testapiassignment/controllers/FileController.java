@@ -34,39 +34,49 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
-    @GetMapping
+    @GetMapping(produces = { "application/xml", "application/json" })
     @ResponseBody
-    public HttpEntity<List<File>> getAllFiles(@RequestParam(required=false, defaultValue="") String fileName) {
-        
-        List<File> allFilesList = null;
-        
-        if(fileName.equals("")) {
-        
-        allFilesList = fileService.getAll();
+    public HttpEntity<List<File>> getAllFiles(@RequestParam(required = false, defaultValue = "") 
+                                                            String fileName) {
 
-        if (!allFilesList.isEmpty()) {
+        List<File> allFilesList = null;
+
+        if (fileName.equals("")) {
+            allFilesList = fileService.getAll();
+        } else {
+            allFilesList = fileService.getByName(fileName);
+        }
+
+        if (allFilesList.isEmpty()) {
+            return new ResponseEntity<List<File>>(HttpStatus.NOT_FOUND);
+        } else {
             for (File file : allFilesList) {
                 Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
                 file.add(selfLink);
             }
         }
         return new ResponseEntity<List<File>>(allFilesList, HttpStatus.OK);
-        } else {
-            allFilesList = fileService.getByName(fileName);
-
-            if (allFilesList.isEmpty()) {
-                return new ResponseEntity<List<File>>(HttpStatus.NOT_FOUND);
-            } else  {
-                for (File file : allFilesList) {
-                    Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
-                    file.add(selfLink);
-                }
-            }
-            return new ResponseEntity<List<File>>(allFilesList, HttpStatus.OK);
-        }
     }
 
-    @GetMapping(value = "/{id:[\\d]+}", produces={"application/xml", "application/json"})
+    @GetMapping(produces = "text/html")
+    public String getAllFilesHtml(Model model) {
+
+        List<File> allFilesList = fileService.getAll();
+
+        if (!allFilesList.isEmpty()) {
+            for (File file : allFilesList) {
+                Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
+                file.add(selfLink);
+            }
+
+            model.addAttribute("fileList", allFilesList);
+        }
+
+        return "ListOfFiles";
+
+    }
+
+    @GetMapping(value = "/{id:[\\d]+}", produces = { "application/xml", "application/json" })
     @ResponseBody
     public HttpEntity<File> getFile(@PathVariable Long id) {
         File file = fileService.getById(id);
@@ -80,28 +90,27 @@ public class FileController {
 
         return new ResponseEntity<File>(file, HttpStatus.OK);
     }
-    
-    @SuppressWarnings("deprecation")
-    @GetMapping(value = "/{id:[\\d]+}", produces="text/html")
-    public String getFileHtml(@PathVariable Long id,  Model model) {
+
+    @GetMapping(value = "/{id:[\\d]+}", produces = "text/html")
+    public String getFileHtml(@PathVariable Long id, Model model) {
         File file = fileService.getById(id);
-        
+
         if (file != null) {
             Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
             file.add(selfLink);
             model.addAttribute("fileId", file.getFileId());
             model.addAttribute("fileName", file.getFileName());
-            model.addAttribute("uploaded", file.getUploaded().toGMTString());
+            model.addAttribute("uploaded", file.getUploaded());
             model.addAttribute("metaDataId", file.getMetaData().getId());
             model.addAttribute("metaData1", file.getMetaData().getMetaData1());
             model.addAttribute("metaData2", file.getMetaData().getMetaData2());
             model.addAttribute("metaData3", file.getMetaData().getMetaData3());
             model.addAttribute("selfLink", file.getId().getHref());
         }
-        
-        return "FileUploaded";
+
+        return "File";
     }
-    
+
     @PutMapping("/{id:[\\d]+}")
     @ResponseBody
     public HttpEntity<File> updateFile(@PathVariable Long id, @RequestBody File file) {
@@ -130,8 +139,7 @@ public class FileController {
         File uploadedFile = fileService.processUploadedFile(file);
 
         if (uploadedFile != null) {
-            redirectAttributes.addAttribute("id", uploadedFile.getFileId())
-                              .addFlashAttribute("message",
+            redirectAttributes.addAttribute("id", uploadedFile.getFileId()).addFlashAttribute("message",
                     "You successfully uploaded " + file.getOriginalFilename() + "!");
 
             return "redirect:/files/{id}";
