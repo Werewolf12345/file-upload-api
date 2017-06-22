@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -18,7 +21,11 @@ import org.springframework.hateoas.ResourceSupport;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@XmlRootElement(name = "file")
+@XmlType(propOrder = { "fileId", "fileName", "uploaded", "metaData" })
+@JsonPropertyOrder({ "fileId", "fileName", "uploaded", "metaData"  })
 @JsonInclude(value=Include.NON_EMPTY, content=Include.NON_NULL)
 @Entity
 @Table(name = "files")
@@ -41,6 +48,7 @@ public class File extends ResourceSupport {
     @Id
     @Column(name = "file_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @XmlElement
     public long getFileId() {
         return fileId;
     }
@@ -49,6 +57,7 @@ public class File extends ResourceSupport {
         this.fileId = id;
     }
 
+    @XmlElement
     public String getFileName() {
         return fileName;
     }
@@ -57,6 +66,7 @@ public class File extends ResourceSupport {
         this.fileName = fileName;
     }
 
+    @XmlElement
     public Date getUploaded() {
         return uploaded;
     }
@@ -65,6 +75,7 @@ public class File extends ResourceSupport {
         this.uploaded = uploaded;
     }
 
+    @XmlElement
     @OneToOne(fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     @JoinColumn(name = "metadata_id")

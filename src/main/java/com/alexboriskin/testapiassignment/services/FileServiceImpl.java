@@ -45,14 +45,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File getByName(String name) {
-        List<File> database = getAll();
-
-        return database.stream()
-                       .filter(t -> t.getFileName().equals(name))
-                       .findAny()
-                       .orElse(null);
-    }
+    public List<File> getByName(String name) {
+         return fileRepository.findByFileName(name);
+     }
 
     @Override
     @Transactional

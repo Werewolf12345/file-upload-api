@@ -1,35 +1,27 @@
 package com.alexboriskin.testapiassignment;
 
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-
 @EnableWebMvc
 @Configuration
 public class MyWebMvcConfig extends WebMvcConfigurerAdapter {
-    public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
-        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new Hibernate5Module());
-        messageConverter.setObjectMapper(mapper);
-        return messageConverter;
-
-    }
-
+        
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(jacksonMessageConverter());
-        super.configureMessageConverters(converters);
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+      configurer.favorPathExtension(true).
+      favorParameter(true).
+      parameterName("mediaType").
+      ignoreAcceptHeader(false).
+      useJaf(false).
+      defaultContentType(MediaType.APPLICATION_JSON).
+      mediaType("xml", MediaType.APPLICATION_XML).
+      mediaType("json", MediaType.APPLICATION_JSON);
     }
 
     @Bean
@@ -42,5 +34,4 @@ public class MyWebMvcConfig extends WebMvcConfigurerAdapter {
             }
         };
     }
-
 }

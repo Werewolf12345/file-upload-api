@@ -27,7 +27,7 @@ import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.services.FileService;
 
 @Controller
-@RequestMapping(value = "/files")
+@RequestMapping(value = "/files", produces={"application/xml", "application/json"})
 public class FileController {
 
     @Autowired
@@ -35,8 +35,13 @@ public class FileController {
 
     @GetMapping
     @ResponseBody
-    public HttpEntity<List<File>> getAllFiles() {
-        List<File> allFilesList = fileService.getAll();
+    public HttpEntity<List<File>> getAllFiles(@RequestParam(required=false, defaultValue="") String fileName) {
+        
+        List<File> allFilesList = null;
+        
+        if(fileName.equals("")) {
+        
+        allFilesList = fileService.getAll();
 
         if (!allFilesList.isEmpty()) {
             for (File file : allFilesList) {
@@ -45,9 +50,22 @@ public class FileController {
             }
         }
         return new ResponseEntity<List<File>>(allFilesList, HttpStatus.OK);
+        } else {
+            allFilesList = fileService.getByName(fileName);
+
+            if (allFilesList.isEmpty()) {
+                return new ResponseEntity<List<File>>(HttpStatus.NOT_FOUND);
+            } else  {
+                for (File file : allFilesList) {
+                    Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
+                    file.add(selfLink);
+                }
+            }
+            return new ResponseEntity<List<File>>(allFilesList, HttpStatus.OK);
+        }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:[\\d]+}")
     @ResponseBody
     public HttpEntity<File> getFile(@PathVariable Long id) {
         File file = fileService.getById(id);
@@ -61,8 +79,8 @@ public class FileController {
 
         return new ResponseEntity<File>(file, HttpStatus.OK);
     }
-
-    @PutMapping("/{id}")
+    
+    @PutMapping("/{id:[\\d]+}")
     @ResponseBody
     public HttpEntity<File> updateFile(@PathVariable Long id, @RequestBody File file) {
         if (file == null) {
@@ -99,7 +117,7 @@ public class FileController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:[\\d]+}")
     @ResponseBody
     public HttpEntity<File> deleteFile(@PathVariable Long id) {
         File file = fileService.getById(id);

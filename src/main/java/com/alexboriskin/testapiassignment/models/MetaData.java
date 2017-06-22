@@ -8,7 +8,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@XmlRootElement(name = "metadata")
+@XmlType(propOrder = { "id", "metaData1", "metaData2", "metaData3" })
+@JsonPropertyOrder({ "id", "metaData1", "metaData2", "metaData3"  })
 @Entity
 @Table(name = "metadata")
 public class MetaData implements Serializable {
@@ -32,6 +40,7 @@ public class MetaData implements Serializable {
     @Id
     @Column(name = "metadata_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @XmlElement
     public long getId() {
         return id;
     }
@@ -40,6 +49,7 @@ public class MetaData implements Serializable {
         this.id = id;
     }
 
+    @XmlElement
     public String getMetaData1() {
         return metaData1;
     }
@@ -48,6 +58,7 @@ public class MetaData implements Serializable {
         this.metaData1 = metaData1;
     }
 
+    @XmlElement
     public String getMetaData2() {
         return metaData2;
     }
@@ -56,6 +67,7 @@ public class MetaData implements Serializable {
         this.metaData2 = metaData2;
     }
 
+    @XmlElement
     public String getMetaData3() {
         return metaData3;
     }

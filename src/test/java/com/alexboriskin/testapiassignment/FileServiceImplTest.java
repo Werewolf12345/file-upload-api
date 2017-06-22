@@ -1,9 +1,6 @@
 package com.alexboriskin.testapiassignment;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -87,15 +84,15 @@ public class FileServiceImplTest {
     @Test
     public void testGetByName() {
         List<File> database = Arrays.asList(file1, file2, file3);
-        when(fileRepository.findAll()).thenReturn(database);
+        when(fileRepository.findByFileName("file1.properties")).thenReturn(database);
 
-        File file = fileService.getByName("file1.properties");
-        assertNotNull(file);
-        assertEquals(file1.getFileName(), file.getFileName());
-        assertEquals(file1.getId(), file.getId());
+        List<File> files = fileService.getByName("file1.properties");
+        assertNotNull(files);
+        assertTrue(files.containsAll(database));
+        
 
-        file = fileService.getByName("nonExistingName");
-        assertNull(file);
+        files = fileService.getByName("nonExistingName");
+        assertTrue(files.isEmpty());
     }
 
     @Test

@@ -14,7 +14,7 @@ public interface FileService {
 
     public File getById(long id);
 
-    public File getByName(String name);
+    public List<File> getByName(String name);
 
     public void update(File file);
 

@@ -66,9 +66,9 @@ public class FileControllerTest {
             files.get(i - 1).getMetaData().setId(i);
             files.get(i - 1).getUploaded().setTime(1L);
         }
-        
-        given(fileService.getAll()).willReturn(files);
-        mvc.perform(get("/files").accept(MediaType.APPLICATION_JSON))
+                        
+        given(fileService.getByName("filename")).willReturn(files);
+        mvc.perform(get("/files?fileName=filename").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content()
                         .json("[{'fileId':1,'fileName':'file1.properties','uploaded':1,'metaData':"
@@ -85,10 +85,7 @@ public class FileControllerTest {
         mvc.perform(get("/files").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().string("[]"));
-        
-        verify(fileService, times(2)).getAll();
-        verifyNoMoreInteractions(fileService);
-        
+       
     }
 
     @Test
