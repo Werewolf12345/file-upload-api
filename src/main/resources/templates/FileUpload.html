@@ -2,21 +2,41 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"
 	media="all" />
 <title>File upload</title>
+<link rel="shortcut icon" th:href="@{/static/images/favicon.ico}" />
 </head>
 <body>
-	<p th:text="'Hello, ' + ${name} + '!'" />
-	<form action="files/upload" enctype="multipart/form-data" method="post">
-		<p>
-			Select a file : <input name="file" size="45" type="file" />
-		</p>
-		<input type="submit" value="Upload" />
-	</form>
-	<p>
-		<a href="../files" th:href="@{/files}">Or just go see list of all
-			Files in DB</a>
-	</p>
+	<div class="header">
+		<div class="container">
+			<h1 class="header-heading">File upload</h1>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="container">
+			<div class="main">
+				<p th:text="'Hello, ' + ${name} + '!'" />
+				<form action="files/upload" enctype="multipart/form-data"
+					method="post">
+					<p>
+						Select a file : <input name="file" size="45" type="file"
+							class="btn" />
+					</p>
+					<input type="submit" value="Upload" class="btn" />
+				</form>
+				<p>
+					<a href="../files" th:href="@{/files}">Or just go see list of
+						all Files in DB</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="container">&copy; Alex Soft 2017</div>
+	</div>
 </body>
 </html>

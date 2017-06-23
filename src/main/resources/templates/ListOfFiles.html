@@ -2,38 +2,53 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"
 	media="all" />
 <title>List of Files in DB</title>
+<link rel="shortcut icon" th:href="@{/static/images/favicon.ico}" />
 </head>
 <body>
+	<div class="header">
+		<div class="container">
+			<h1 class="header-heading">List of Files in DB</h1>
+		</div>
+	</div>
 
-	<table>
-		<tbody>
+	<div class="content">
+		<div class="container">
+			<div class="main">
 
-			<tr>
-				<td>File ID</td>
-				<td>File Name</td>
-				<td>Upload Date</td>
-				<td>RESTful Link</td>
-			</tr>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>File ID</th>
+							<th>File Name</th>
+							<th>Upload Date</th>
+							<th>RESTful Link</th>
+						</tr>
+					</thead>
 
+					<tbody>
+						<tr th:each="file : ${fileList}">
+							<th scope="row" th:text="${file.fileId}">fileId</th>
+							<td th:text="${file.fileName}">filename</td>
+							<td th:text="${#dates.format(file.uploaded, 'dd-MMM-yyyy')}">dd-MMM-yyyy</td>
+							<td><a th:href="${file.id.href}"
+								href="http://localhost:8080/files/XX" th:text="${file.id.href}">http://localhost:8080/files/XX</a></td>
+						</tr>
+					</tbody>
+				</table>
 
-			<tr th:each="file : ${fileList}">
-				<td th:text="${file.fileId}">fileId</td>
-				<td th:text="${file.fileName}">filename</td>
-				<td th:text="${#dates.format(file.uploaded, 'dd-MMM-yyyy')}">dd-MMM-yyyy</td>
-				<td><a th:href="${file.id.href}"
-					href="http://localhost:8080/files/XX" 
-					th:text="${file.id.href}">http://localhost:8080/files/XX</a></td>
-			</tr>
-
-		</tbody>
-	</table>
-	
-	<p>
-      <a href="../" th:href="@{/}">Return to home</a>
-    </p>
-
+				<p>
+					<a href="../" th:href="@{/}">Return to home</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="container">&copy; Alex Soft 2017</div>
+	</div>
 </body>
 </html>

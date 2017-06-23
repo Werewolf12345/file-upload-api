@@ -2,61 +2,82 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"
 	media="all" />
 <title th:text="'File with ID: ' + ${fileId}">File with ID: XX</title>
+<link rel="shortcut icon" th:href="@{/static/images/favicon.ico}" />
 </head>
 <body>
+	<div class="header">
+		<div class="container">
+			<h1 class="header-heading" th:text="'File with ID: ' + ${fileId}">File
+				with ID: XX</h1>
+		</div>
+	</div>
 
-	<table>
-		<tbody>
-			<tr>
-				<td>File</td>
-			</tr>
-			<tr>
-				<td>File ID</td>
-				<td th:text="${fileId}">fileId</td>
-			</tr>
-			<tr>
-				<td>File Name</td>
-				<td th:text="${fileName}">filename</td>
-			</tr>
-			<tr>
-				<td>Upload Date</td>
-				<td th:text="${#dates.format(uploaded, 'dd-MMM-yyyy')}">date</td>
-			</tr>
-			<tr>
-				<td>MetaData</td>
-			</tr>
-			<tr>
-				<td>MetaData ID</td>
-				<td th:text="${metaDataId}">ID</td>
-			</tr>
-			<tr>
-				<td>MetaData 1</td>
-				<td th:text="${metaData1}">metaData1</td>
-			</tr>
-			<tr>
-				<td>MetaData 2</td>
-				<td th:text="${metaData2}">metaData2</td>
-			</tr>
-			<tr>
-				<td>MetaData 3</td>
-				<td th:text="${metaData3}">metaData3</td>
-			</tr>
-			<tr>
-				<td>RESTful Link</td>
-				<td><a href="files/33" th:href="${selfLink}"
-					th:text="${selfLink}">http://localhost:8080/files/XX</a></td>
-			</tr>
+	<div class="content">
+		<div class="container">
+			<div class="main">
 
-		</tbody>
-	</table>
-	<p>
-		<a href="../files" th:href="@{/files}">See list of all Files in DB</a>
-	</p>
-	<p>
-		<a href="../" th:href="@{/}">Home</a>
-	</p>
+				<table>
+					<tbody>
+						<tr>
+							<th>File</th>
+						</tr>
+						<tr>
+							<th>File ID</th>
+							<td th:text="${fileId}">fileId</td>
+						</tr>
+						<tr>
+							<th>File Name</th>
+							<td th:text="${fileName}">filename</td>
+						</tr>
+						<tr>
+							<th>Upload Date</th>
+							<td th:text="${#dates.format(uploaded, 'dd-MMM-yyyy')}">date</td>
+						</tr>
+						<tr>
+							<th>MetaData</th>
+						</tr>
+						<tr>
+							<th>MetaData ID</th>
+							<td th:text="${metaDataId}">ID</td>
+						</tr>
+						<tr>
+							<th>MetaData 1</th>
+							<td th:text="${metaData1}">metaData1</td>
+						</tr>
+						<tr>
+							<th>MetaData 2</th>
+							<td th:text="${metaData2}">metaData2</td>
+						</tr>
+						<tr>
+							<th>MetaData 3</th>
+							<td th:text="${metaData3}">metaData3</td>
+						</tr>
+						<tr>
+							<th>RESTful Link</th>
+							<td><a href="files/33" th:href="${selfLink}"
+								th:text="${selfLink}">http://localhost:8080/files/XX</a></td>
+						</tr>
+
+					</tbody>
+				</table>
+				<p></p>
+				<p>
+					<a href="../files" th:href="@{/files}">See list of all Files in
+						DB</a>
+				</p>
+				<p>
+					<a href="../" th:href="@{/}">Home</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="container">&copy; Alex Soft 2017</div>
+	</div>
 </body>
 </html>

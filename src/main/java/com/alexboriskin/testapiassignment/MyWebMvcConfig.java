@@ -29,6 +29,8 @@ public class MyWebMvcConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**")
                 .addResourceLocations("classpath:/css/");
+        registry.addResourceHandler("/static/images/**")
+                .addResourceLocations("classpath:/static/images/");
     }
 
     @Bean
@@ -36,9 +38,9 @@ public class MyWebMvcConfig extends WebMvcConfigurerAdapter {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addViewControllers(ViewControllerRegistry registry) {
-                registry.addViewController("/").setViewName(
-                        "forward:/files/upload");
+                registry.addViewController("/").setViewName("forward:/files/upload");
             }
         };
     }
+
 }
