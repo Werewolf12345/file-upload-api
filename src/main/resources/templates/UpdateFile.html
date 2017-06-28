@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"
+          media="all"/>
+    <title th:text="'File with ID: ' + ${file.fileId}">File with ID: XX</title>
+    <link rel="shortcut icon" th:href="@{/static/images/favicon.ico}"/>
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <h1 th:text="'Update File with ID: ' + ${file.fileId}">Update File with ID: XX</h1>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container">
+        <h2>File Details</h2>
+        <div>
+            <form class="form-horizontal" th:object="${file}"
+                  th:action="@{/files/{fileId}/update(fileId=${file.fileId})}" method="post">
+                <input type="hidden" th:value="*{fileId}" th:field="*{fileId}"/>
+                <input type="hidden" th:value="*{metaData.id}" th:field="*{metaData.id}"/>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">File Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:value="*{fileName}" th:field="*{fileName}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Upload Date:</label>
+                    <div class="col-sm-10">
+                        <input type="datetime-local" class="form-control" th:value="*{uploaded}"
+                               th:field="*{uploaded}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Metadata 1:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:value="*{metaData.metaData1}"
+                               th:field="*{metaData.metaData1}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Metadata 2:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:value="*{metaData.metaData2}"
+                               th:field="*{metaData.metaData2}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Metadata 3:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:value="*{metaData.metaData2}"
+                               th:field="*{metaData.metaData3}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="container">&copy; Alex Soft 2017</div>
+</div>
+</body>
+</html>

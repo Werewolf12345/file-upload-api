@@ -1,25 +1,10 @@
 package com.alexboriskin.testapiassignment;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import com.alexboriskin.testapiassignment.controllers.FileController;
+import com.alexboriskin.testapiassignment.models.File;
+import com.alexboriskin.testapiassignment.models.MetaData;
+import com.alexboriskin.testapiassignment.services.FileService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +16,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alexboriskin.testapiassignment.controllers.FileController;
-import com.alexboriskin.testapiassignment.models.File;
-import com.alexboriskin.testapiassignment.models.MetaData;
-import com.alexboriskin.testapiassignment.services.FileService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(FileController.class)
@@ -83,8 +74,8 @@ public class FileControllerTest {
         
         files.clear();
         mvc.perform(get("/files").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().string("[]"));
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(""));
        
     }
 

@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"
 	media="all" />
@@ -26,7 +25,8 @@
 							<th>File ID</th>
 							<th>File Name</th>
 							<th>Upload Date</th>
-							<th>RESTful Link</th>
+							<th></th>
+							<th></th>
 						</tr>
 					</thead>
 
@@ -36,13 +36,18 @@
 							<td th:text="${file.fileName}">filename</td>
 							<td th:text="${#dates.format(file.uploaded, 'dd-MMM-yyyy')}">dd-MMM-yyyy</td>
 							<td><a th:href="${file.id.href}"
-								href="http://localhost:8080/files/XX" th:text="${file.id.href}">http://localhost:8080/files/XX</a></td>
+								href="http://localhost:8080/files/XX">VIEW</a></td>
+							<td><a th:href="@{/files/{fileId}/update(fileId=${file.fileId})}"
+								href="http://localhost:8080/files/XX/update">EDIT</a></td>
 						</tr>
 					</tbody>
 				</table>
 
 				<p>
 					<a href="../" th:href="@{/}">Return to home</a>
+				</p>
+				<p>
+					<a href="../" th:href="@{/files/new}">Crate new file with form</a>
 				</p>
 			</div>
 		</div>
