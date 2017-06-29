@@ -1,5 +1,13 @@
 package com.alexboriskin.testapiassignment.services;
 
+import com.alexboriskin.testapiassignment.dao.FileRepository;
+import com.alexboriskin.testapiassignment.models.File;
+import com.alexboriskin.testapiassignment.models.MetaData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -7,20 +15,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.alexboriskin.testapiassignment.dao.FileRepository;
-import com.alexboriskin.testapiassignment.models.File;
-import com.alexboriskin.testapiassignment.models.MetaData;
-
 @Service
 public class FileServiceImpl implements FileService {
 
-    @Autowired
     private FileRepository fileRepository;
+
+    @Autowired
+    public void setFileRepository(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     @Override
     @Transactional

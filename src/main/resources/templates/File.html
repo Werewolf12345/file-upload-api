@@ -6,14 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"
 	media="all" />
-<title th:text="'File with ID: ' + ${fileId}">File with ID: XX</title>
+	<title th:text="${file != null} ? 'File with ID: ' + ${file.fileId} + ' update' : 'Wrong File ID!'">
+		File with ID: XX
+	</title>
 <link rel="shortcut icon" th:href="@{/static/images/favicon.ico}" />
 </head>
 <body>
 	<div class="header">
-		<div class="container">
-			<h1 class="header-heading" th:text="'File with ID: ' + ${fileId}">File
-				with ID: XX</h1>
+		<div class="container" th:if="${file == null}">
+			<strong class="header-heading" >No result found!</strong> Please retry with different File ID.
+		</div>
+		<div class="container" th:if="${file != null}">
+			<h1 class="header-heading" th:text="'File with ID: ' + ${file.fileId}">File with ID: XX</h1>
 		</div>
 	</div>
 
@@ -28,39 +32,39 @@
 						</tr>
 						<tr>
 							<th>File ID</th>
-							<td th:text="${fileId}">fileId</td>
+							<td th:text="${file.fileId}">fileId</td>
 						</tr>
 						<tr>
 							<th>File Name</th>
-							<td th:text="${fileName}">filename</td>
+							<td th:text="${file.fileName}">filename</td>
 						</tr>
 						<tr>
 							<th>Upload Date</th>
-							<td th:text="${#dates.format(uploaded, 'dd-MMM-yyyy')}">date</td>
+							<td th:text="${#dates.format(file.uploaded, 'dd-MMM-yyyy')}">date</td>
 						</tr>
 						<tr>
 							<th>MetaData</th>
 						</tr>
 						<tr>
 							<th>MetaData ID</th>
-							<td th:text="${metaDataId}">ID</td>
+							<td th:text="${file.metaData.id}">ID</td>
 						</tr>
 						<tr>
 							<th>MetaData 1</th>
-							<td th:text="${metaData1}">metaData1</td>
+							<td th:text="${file.metaData.metaData1}">metaData1</td>
 						</tr>
 						<tr>
 							<th>MetaData 2</th>
-							<td th:text="${metaData2}">metaData2</td>
+							<td th:text="${file.metaData.metaData2}">metaData2</td>
 						</tr>
 						<tr>
 							<th>MetaData 3</th>
-							<td th:text="${metaData3}">metaData3</td>
+							<td th:text="${file.metaData.metaData3}">metaData3</td>
 						</tr>
 						<tr>
 							<th>RESTful Link</th>
-							<td><a href="files/33" th:href="${selfLink}"
-								th:text="${selfLink}">http://localhost:8080/files/XX</a></td>
+							<td><a href="files/33" th:href="${file.id.href}"
+								th:text="${file.id.href}">http://localhost:8080/files/XX</a></td>
 						</tr>
 
 					</tbody>

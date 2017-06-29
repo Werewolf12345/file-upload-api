@@ -123,14 +123,19 @@ public class FileControllerTest {
         verify(fileService, times(1)).update(any(File.class));
         verifyNoMoreInteractions(fileService);
 
+        mvc.perform(
+                get("/files/{id}/update", EXISTING_ID).accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
     }
 
     @Test
     public void testUploadFile() throws Exception {
       
         mvc.perform(
-                get("/files/upload"))
-                .andExpect(status().isOk());
+                get("/files/upload").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
         
     }
 

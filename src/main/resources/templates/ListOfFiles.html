@@ -30,7 +30,7 @@
 						</tr>
 					</thead>
 
-					<tbody>
+					<tbody th:if="${not #lists.isEmpty(fileList)}">
 						<tr th:each="file : ${fileList}">
 							<th scope="row" th:text="${file.fileId}">fileId</th>
 							<td th:text="${file.fileName}">filename</td>

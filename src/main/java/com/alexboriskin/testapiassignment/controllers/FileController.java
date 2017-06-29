@@ -95,14 +95,7 @@ public class FileController {
         if (file != null) {
             Link selfLink = linkTo(methodOn(FileController.class).getFile(file.getFileId())).withSelfRel();
             file.add(selfLink);
-            model.addAttribute("fileId", file.getFileId());
-            model.addAttribute("fileName", file.getFileName());
-            model.addAttribute("uploaded", file.getUploaded());
-            model.addAttribute("metaDataId", file.getMetaData().getId());
-            model.addAttribute("metaData1", file.getMetaData().getMetaData1());
-            model.addAttribute("metaData2", file.getMetaData().getMetaData2());
-            model.addAttribute("metaData3", file.getMetaData().getMetaData3());
-            model.addAttribute("selfLink", file.getId().getHref());
+            model.addAttribute("file", file);
         }
 
         return "File";
