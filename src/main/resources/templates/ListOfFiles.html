@@ -27,6 +27,7 @@
 							<th>Upload Date</th>
 							<th></th>
 							<th></th>
+							<th></th>
 						</tr>
 					</thead>
 
@@ -39,6 +40,12 @@
 								href="http://localhost:8080/files/XX">VIEW</a></td>
 							<td><a th:href="@{/files/{fileId}/update(fileId=${file.fileId})}"
 								href="http://localhost:8080/files/XX/update">EDIT</a></td>
+							<td>
+								<form action="#" method="post"
+									  th:action="@{/files/{fileId}/delete(fileId=${file.fileId})}">
+									<button class="btn" type="submit" id="submitButton">DELETE</button>
+								</form>
+							</td>
 						</tr>
 					</tbody>
 				</table>

@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ FileControllerTest.class, FileServiceImplTest.class })
+@SuiteClasses({ RestControllerTest.class, HtmlControllerTest.class, FileServiceImplTest.class })
 public class AllTests {
 
 }

@@ -1,27 +1,18 @@
 package com.alexboriskin.testapiassignment.models;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.springframework.hateoas.ResourceSupport;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.ResourceSupport;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import java.util.Date;
 
 @XmlRootElement(name = "file")
 @XmlType(propOrder = { "fileId", "fileName", "uploaded", "metaData" })
@@ -33,6 +24,7 @@ public class File extends ResourceSupport {
    
     private long fileId;
     private String fileName;
+    @DateTimeFormat(pattern = "dd-MMM-yyyy")
     private Date uploaded;
     private MetaData metaData;
         
