@@ -1,27 +1,26 @@
 package com.alexboriskin.testapiassignment.services;
 
-import java.util.List;
-
+import com.alexboriskin.testapiassignment.models.File;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alexboriskin.testapiassignment.models.File;
+import java.util.List;
 
 public interface FileService {
 
-    public void saveNew(File file);
+    void saveNew(File file);
 
-    public List<File> getAll();
+    List<File> getAll();
 
-    public File getById(long id);
+    File getById(long id);
 
-    public List<File> getByName(String name);
+    List<File> getByName(String name);
 
-    public void update(File file);
+    void update(File file);
 
-    public void deleteById(long id);
+    void deleteById(long id);
 
-    public void deleteByName(String name);
+    void deleteByName(String name);
 
-    public File processUploadedFile(MultipartFile file);
+    File processUploadedFile(MultipartFile file);
    
 }

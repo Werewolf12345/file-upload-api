@@ -28,15 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class HtmlControllerTest {
     
     private final long EXISTING_ID = 1L;
-    private final long NON_EXISTING_ID = 2L;
-
     private MetaData metaData1 = new MetaData("metaData11", "metaData12", "metaData13");
-    private File file1 = new File("file1.properties", new Date(), metaData1);
-    private MetaData metaData2 = new MetaData("metaData21", "metaData22", "metaData23");
-    private File file2 = new File("file2.properties", new Date(), metaData2);
-    private MetaData metaData3 = new MetaData("metaData31", "metaData32", "metaData33");
-    private File file3 = new File("file3.properties", new Date(), metaData3);
-
+    private File file = new File("file1.properties", new Date(), metaData1);
+    
     @Autowired
     private MockMvc mvc;
 
@@ -97,12 +91,12 @@ public class HtmlControllerTest {
     @Test
     public void testUpdateFile() throws Exception {
         
-        file1.setFileId(EXISTING_ID);
-        file1.getMetaData().setId(EXISTING_ID);
-        file1.getUploaded().setTime(1L);
+        file.setFileId(EXISTING_ID);
+        file.getMetaData().setId(EXISTING_ID);
+        file.getUploaded().setTime(1L);
        
-        doNothing().when(fileService).update(file1);
-        given(fileService.getById(EXISTING_ID)).willReturn(file1);
+        doNothing().when(fileService).update(file);
+        given(fileService.getById(EXISTING_ID)).willReturn(file);
 
         mvc.perform(
                 get("/files/{id}/update", EXISTING_ID).accept(MediaType.TEXT_HTML))
@@ -132,12 +126,12 @@ public class HtmlControllerTest {
     @Test
     public void testDeleteFile() throws Exception {
 
-        file1.setFileId(EXISTING_ID);
-        file1.getMetaData().setId(EXISTING_ID);
-        file1.getUploaded().setTime(1L);
+        file.setFileId(EXISTING_ID);
+        file.getMetaData().setId(EXISTING_ID);
+        file.getUploaded().setTime(1L);
 
         doNothing().when(fileService).deleteById(EXISTING_ID);
-        given(fileService.getById(EXISTING_ID)).willReturn(file1);
+        given(fileService.getById(EXISTING_ID)).willReturn(file);
 
         mvc.perform(
                 post("/files/{id}/delete", EXISTING_ID).accept(MediaType.TEXT_HTML))
@@ -163,13 +157,13 @@ public class HtmlControllerTest {
     @Test
     public void testHandleFileUpload() throws Exception {
         
-        file1.setFileId(EXISTING_ID);
-        file1.getMetaData().setId(EXISTING_ID);
-        file1.getUploaded().setTime(1L);
+        file.setFileId(EXISTING_ID);
+        file.getMetaData().setId(EXISTING_ID);
+        file.getUploaded().setTime(1L);
         
         MockMultipartFile mockFile = new MockMultipartFile("file", "file.name", "text/plain", "bytes".getBytes());
        
-        given(fileService.processUploadedFile(any(MultipartFile.class))).willReturn(file1);
+        given(fileService.processUploadedFile(any(MultipartFile.class))).willReturn(file);
         
         mvc.perform(
                 fileUpload("/files/upload").file(mockFile))

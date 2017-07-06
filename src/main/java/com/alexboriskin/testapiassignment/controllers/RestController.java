@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -27,14 +28,22 @@ public class RestController {
     }
 
     @GetMapping(produces = { "application/xml", "application/json" })
-    public HttpEntity<List<File>> getAllFiles(@RequestParam(required = false, defaultValue = "") String fileName) {
+    public HttpEntity<List<File>> getAllFiles(@RequestParam(required = false, defaultValue = "") String fileName,
+                                              @RequestParam(required = false, defaultValue = "") String ID) {
 
-        List<File> allFilesList;
+        List<File> allFilesList = new ArrayList<>();
+        List<File> filteredList;
 
-        if (fileName.equals("")) {
+        if (fileName.equals("") && ID.equals("")) {
             allFilesList = fileService.getAll();
         } else {
-            allFilesList = fileService.getByName(fileName);
+            if (!ID.equals("")) {
+                allFilesList.add(fileService.getById(Long.parseLong(ID)));
+            }
+            if (!fileName.equals("")) {
+                filteredList = fileService.getByName(fileName);
+                allFilesList.addAll(filteredList);
+            }
         }
 
         if (allFilesList.isEmpty()) {
@@ -46,6 +55,7 @@ public class RestController {
             }
         }
         return new ResponseEntity<>(allFilesList, HttpStatus.OK);
+
     }
 
     @GetMapping(value = "/{id:[\\d]+}", produces = { "application/xml", "application/json" })
