@@ -20,8 +20,7 @@ import java.util.Date;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -45,6 +44,57 @@ public class HtmlControllerTest {
     private FileService fileService;
 
     @Test
+    public void testGetAllFilesHtml() throws Exception {
+        mvc.perform(get("/files").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
+    }
+
+    @Test
+    public void testGetFileHtml() throws Exception {
+        mvc.perform(get("/files/1").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
+    }
+
+    @Test
+    public void testUploadFileHtml() throws Exception {
+        mvc.perform(get("/files/upload").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
+    }
+
+    @Test
+    public void testNewFile() throws Exception {
+
+        doNothing().when(fileService).saveNew(any(File.class));
+
+        mvc.perform(get("/files/new").accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"));
+
+        mvc.perform(
+                post("/files/new")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("fileName", "file1.new")
+                        .param("uploaded", "13-Jun-2017")
+                        .param("metaData.metaData1", "metaData1new")
+                        .param("metaData.metaData2", "metaData2new")
+                        .param("metaData.metaData3", "metaData3new")
+                        .accept(MediaType.TEXT_HTML)
+        )
+
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/files/0"))
+                .andExpect(flash().attribute("message",
+                        "You successfully created file1.new!"))
+                .andExpect(model().hasNoErrors());
+
+        verify(fileService, times(1)).saveNew(any(File.class));
+        verifyNoMoreInteractions(fileService);
+    }
+
+    @Test
     public void testUpdateFile() throws Exception {
         
         file1.setFileId(EXISTING_ID);
@@ -61,6 +111,43 @@ public class HtmlControllerTest {
 
         verify(fileService, times(1)).getById(anyLong());
         verifyNoMoreInteractions(fileService);
+
+        mvc.perform(
+                post("/files/{id}/update", EXISTING_ID)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("fileName", "file1.updated")
+                        .param("uploaded", "13-Jun-2017")
+                        .param("metaData.metaData1", "metaData1Updated")
+                        .param("metaData.metaData2", "metaData2Updated")
+                        .param("metaData.metaData3", "metaData3Updated")
+                        .accept(MediaType.TEXT_HTML)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/files/" + EXISTING_ID));
+
+        verify(fileService, times(1)).update(any(File.class));
+        verifyNoMoreInteractions(fileService);
+    }
+
+    @Test
+    public void testDeleteFile() throws Exception {
+
+        file1.setFileId(EXISTING_ID);
+        file1.getMetaData().setId(EXISTING_ID);
+        file1.getUploaded().setTime(1L);
+
+        doNothing().when(fileService).deleteById(EXISTING_ID);
+        given(fileService.getById(EXISTING_ID)).willReturn(file1);
+
+        mvc.perform(
+                post("/files/{id}/delete", EXISTING_ID).accept(MediaType.TEXT_HTML))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/files"));
+
+        verify(fileService, times(1)).getById(EXISTING_ID);
+        verify(fileService, times(1)).deleteById(EXISTING_ID);
+        verifyNoMoreInteractions(fileService);
+
     }
 
     @Test
@@ -86,9 +173,13 @@ public class HtmlControllerTest {
         
         mvc.perform(
                 fileUpload("/files/upload").file(mockFile))
-                   
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(model().attribute("id", "1"));
+
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().attribute("id", "1"))
+                .andExpect(redirectedUrl("/files/" + EXISTING_ID))
+                .andExpect(flash().attribute("message",
+                        "You successfully uploaded " + "file.name" + "!"))
+                .andExpect(model().hasNoErrors());
         
         verify(fileService, times(1)).processUploadedFile(any(MultipartFile.class));
         verifyNoMoreInteractions(fileService);

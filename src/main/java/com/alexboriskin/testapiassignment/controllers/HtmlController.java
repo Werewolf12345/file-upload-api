@@ -63,21 +63,6 @@ public class HtmlController {
         return "FileUpload";
     }
 
-    @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-
-        File uploadedFile = fileService.processUploadedFile(file);
-
-        if (uploadedFile != null) {
-            redirectAttributes.addAttribute("id", uploadedFile.getFileId()).addFlashAttribute("message",
-                    "You successfully uploaded " + file.getOriginalFilename() + "!");
-
-            return "redirect:/files/{id}";
-        } else {
-            return "redirect:/";
-        }
-    }
-
     @GetMapping(value = "/new", produces = "text/html")
     public String newFile(Model model) {
         MetaData metaData = new MetaData();
@@ -87,6 +72,14 @@ public class HtmlController {
 
         model.addAttribute("file", file);
         return "CreateFile";
+    }
+
+    @GetMapping(value = "{id:[\\d]+}/update", produces = "text/html")
+    public String updateFile(@PathVariable Long id, Model model) {
+        File file = fileService.getById(id);
+
+        model.addAttribute("file", file);
+        return "UpdateFile";
     }
 
     @PostMapping("/new")
@@ -102,12 +95,19 @@ public class HtmlController {
         }
     }
 
-    @GetMapping(value = "{id:[\\d]+}/update", produces = "text/html")
-    public String updateFile(@PathVariable Long id, Model model) {
-        File file = fileService.getById(id);
+    @PostMapping("/upload")
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
-        model.addAttribute("file", file);
-        return "UpdateFile";
+        File uploadedFile = fileService.processUploadedFile(file);
+
+        if (uploadedFile != null) {
+            redirectAttributes.addAttribute("id", uploadedFile.getFileId()).addFlashAttribute("message",
+                    "You successfully uploaded " + file.getOriginalFilename() + "!");
+
+            return "redirect:/files/{id}";
+        } else {
+            return "redirect:/";
+        }
     }
 
     @PostMapping("{id:[\\d]+}/update")
