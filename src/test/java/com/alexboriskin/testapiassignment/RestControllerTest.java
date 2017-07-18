@@ -177,7 +177,7 @@ public class RestControllerTest {
         String json = new ObjectMapper().writeValueAsString(file1);
         String xml = new XmlMapper().writeValueAsString(file1);
 
-        doNothing().when(fileService).saveNew(file1);
+        given(fileService.saveNew(file1)).willReturn(file1);
 
         mvc.perform(
                 post("/files")

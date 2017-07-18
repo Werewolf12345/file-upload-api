@@ -1,5 +1,6 @@
 package com.alexboriskin.testapiassignment;
 
+import com.alexboriskin.testapiassignment.commands.FileForm;
 import com.alexboriskin.testapiassignment.controllers.HtmlController;
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.models.MetaData;
@@ -61,7 +62,7 @@ public class HtmlControllerTest {
     @Test
     public void testNewFile() throws Exception {
 
-        doNothing().when(fileService).saveNew(any(File.class));
+        given(fileService.saveNew(any(FileForm.class))).willReturn(file);
 
         mvc.perform(get("/files/new").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
@@ -72,19 +73,19 @@ public class HtmlControllerTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("fileName", "file1.new")
                         .param("uploaded", "13-Jun-2017")
-                        .param("metaData.metaData1", "metaData1new")
-                        .param("metaData.metaData2", "metaData2new")
-                        .param("metaData.metaData3", "metaData3new")
+                        .param("metaData1", "metaData1new")
+                        .param("metaData2", "metaData2new")
+                        .param("metaData3", "metaData3new")
                         .accept(MediaType.TEXT_HTML)
         )
 
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/files/0"))
                 .andExpect(flash().attribute("message",
-                        "You successfully created file1.new!"))
+                        "You successfully created file1.properties!"))
                 .andExpect(model().hasNoErrors());
 
-        verify(fileService, times(1)).saveNew(any(File.class));
+        verify(fileService, times(1)).saveNew(any(FileForm.class));
         verifyNoMoreInteractions(fileService);
     }
 

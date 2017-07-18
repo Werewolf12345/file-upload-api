@@ -1,5 +1,7 @@
 package com.alexboriskin.testapiassignment.services;
 
+import com.alexboriskin.testapiassignment.commands.FileForm;
+import com.alexboriskin.testapiassignment.converters.FileFormToFileConverter;
 import com.alexboriskin.testapiassignment.dao.FileRepository;
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.models.MetaData;
@@ -19,16 +21,28 @@ import java.util.Properties;
 public class FileServiceImpl implements FileService {
 
     private FileRepository fileRepository;
+    private FileFormToFileConverter fileFormToFileConverter;
 
     @Autowired
     public void setFileRepository(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
     }
 
+    @Autowired
+    public void setFileFormToFileConverter(FileFormToFileConverter fileFormToFileConverter) {
+        this.fileFormToFileConverter = fileFormToFileConverter;
+    }
+
     @Override
     @Transactional
-    public void saveNew(File file) {
-        fileRepository.save(file);
+    public File saveNew(File file) {
+        return fileRepository.save(file);
+    }
+
+    @Override
+    @Transactional
+    public File saveNew(FileForm fileForm) {
+        return fileRepository.save(fileFormToFileConverter.convert(fileForm));
     }
 
     @Override

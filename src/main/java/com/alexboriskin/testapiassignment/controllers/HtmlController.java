@@ -1,7 +1,7 @@
 package com.alexboriskin.testapiassignment.controllers;
 
+import com.alexboriskin.testapiassignment.commands.FileForm;
 import com.alexboriskin.testapiassignment.models.File;
-import com.alexboriskin.testapiassignment.models.MetaData;
 import com.alexboriskin.testapiassignment.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -65,12 +65,11 @@ public class HtmlController {
 
     @GetMapping(value = "/new", produces = "text/html")
     public String newFile(Model model) {
-        MetaData metaData = new MetaData();
-        File file = new File();
-        file.setUploaded(new Date());
-        file.setMetaData(metaData);
 
-        model.addAttribute("file", file);
+        FileForm fileForm = new FileForm();
+        fileForm.setUploaded(new Date());
+
+        model.addAttribute("fileForm", fileForm);
         return "CreateFile";
     }
 
@@ -83,12 +82,12 @@ public class HtmlController {
     }
 
     @PostMapping("/new")
-    public String handleFileNew(File file, RedirectAttributes redirectAttributes) {
+    public String handleFileNew(FileForm fileForm, RedirectAttributes redirectAttributes) {
 
-        if (file != null) {
-            fileService.saveNew(file);
-            redirectAttributes.addAttribute("id", file.getFileId()).addFlashAttribute("message",
-                    "You successfully created " + file.getFileName() + "!");
+        if (fileForm != null) {
+            File savedFile = fileService.saveNew(fileForm);
+            redirectAttributes.addAttribute("id", savedFile.getFileId()).addFlashAttribute("message",
+                    "You successfully created " + savedFile.getFileName() + "!");
             return "redirect:/files/{id}";
         } else {
             return "redirect:/";

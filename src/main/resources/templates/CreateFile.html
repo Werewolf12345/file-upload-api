@@ -19,7 +19,7 @@
     <div class="container">
         <h2>File Details</h2>
         <div>
-            <form class="form-horizontal" th:object="${file}" th:action="@{/files/new}" method="post">
+            <form class="form-horizontal" th:object="${fileForm}" th:action="@{/files/new}" method="post">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">File Name:</label>
                     <div class="col-sm-10">
@@ -35,19 +35,19 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Metadata 1:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{metaData.metaData1}"/>
+                        <input type="text" class="form-control" th:field="*{metaData1}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Metadata 2:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{metaData.metaData2}"/>
+                        <input type="text" class="form-control" th:field="*{metaData2}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Metadata 3:</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" th:field="*{metaData.metaData3}"/>
+                        <input type="text" class="form-control" th:field="*{metaData3}"/>
                     </div>
                 </div>
                 <div class="row">
