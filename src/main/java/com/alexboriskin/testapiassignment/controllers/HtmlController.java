@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
@@ -82,7 +84,12 @@ public class HtmlController {
     }
 
     @PostMapping("/new")
-    public String handleFileNew(FileForm fileForm, RedirectAttributes redirectAttributes) {
+    public String handleFileNew(@Valid FileForm fileForm, BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes) {
+
+        if(bindingResult.hasErrors()){
+            return "CreateFile";
+        }
 
         if (fileForm != null) {
             File savedFile = fileService.saveNew(fileForm);

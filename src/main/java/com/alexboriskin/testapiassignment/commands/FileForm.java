@@ -1,5 +1,6 @@
 package com.alexboriskin.testapiassignment.commands;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -9,12 +10,17 @@ import java.util.Date;
  */
 public class FileForm {
     private long fileId;
+    @NotEmpty
     private String fileName;
+
     @DateTimeFormat(pattern = "dd-MMM-yyyy")
     private Date uploaded;
     private long metadataId;
+    @NotEmpty
     private String metaData1;
+    @NotEmpty
     private String metaData2;
+    @NotEmpty
     private String metaData3;
 
     public long getFileId() {
