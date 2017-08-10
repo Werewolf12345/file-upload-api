@@ -5,7 +5,6 @@ import com.alexboriskin.testapiassignment.converters.FileFormToFileConverter;
 import com.alexboriskin.testapiassignment.dao.FileRepository;
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.models.MetaData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,13 +22,8 @@ public class FileServiceImpl implements FileService {
     private FileRepository fileRepository;
     private FileFormToFileConverter fileFormToFileConverter;
 
-    @Autowired
-    public void setFileRepository(FileRepository fileRepository) {
+    public FileServiceImpl(FileRepository fileRepository, FileFormToFileConverter fileFormToFileConverter) {
         this.fileRepository = fileRepository;
-    }
-
-    @Autowired
-    public void setFileFormToFileConverter(FileFormToFileConverter fileFormToFileConverter) {
         this.fileFormToFileConverter = fileFormToFileConverter;
     }
 
@@ -84,7 +78,7 @@ public class FileServiceImpl implements FileService {
         List<File> database = getAll();
 
         File fileToDelete = database.stream()
-                                    .filter(t -> t.getFileName().equals(name))
+                                    .filter(t -> t.getFileName().equalsIgnoreCase(name))
                                     .findAny()
                                     .orElse(null);
         

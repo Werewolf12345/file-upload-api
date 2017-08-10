@@ -1,19 +1,12 @@
 package com.alexboriskin.testapiassignment;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import com.alexboriskin.testapiassignment.commands.FileForm;
+import com.alexboriskin.testapiassignment.converters.FileFormToFileConverter;
+import com.alexboriskin.testapiassignment.dao.FileRepository;
+import com.alexboriskin.testapiassignment.models.File;
+import com.alexboriskin.testapiassignment.models.MetaData;
+import com.alexboriskin.testapiassignment.services.FileService;
+import com.alexboriskin.testapiassignment.services.FileServiceImpl;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,11 +18,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alexboriskin.testapiassignment.dao.FileRepository;
-import com.alexboriskin.testapiassignment.models.File;
-import com.alexboriskin.testapiassignment.models.MetaData;
-import com.alexboriskin.testapiassignment.services.FileService;
-import com.alexboriskin.testapiassignment.services.FileServiceImpl;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -37,9 +35,11 @@ public class FileServiceImplTest {
 
     @Mock
     private FileRepository fileRepository;
-   
+    @Mock
+    private FileFormToFileConverter fileFormToFileConverter;
+
     @InjectMocks
-    private FileService fileService = new FileServiceImpl();
+    private FileService fileService = new FileServiceImpl(fileRepository, fileFormToFileConverter);
     
     private File file1 = new File("file1.properties", new Date(), null);
     private MetaData metaData1 = new MetaData("metaData11", "metaData12", "metaData13");
@@ -47,6 +47,7 @@ public class FileServiceImplTest {
     private MetaData metaData2 = new MetaData("metaData21", "metaData22", "metaData23");
     private File file3 = new File("file3.properties", new Date(), null);
     private MetaData metaData3 = new MetaData("metaData31", "metaData32", "metaData33");
+    private FileForm fileForm = new FileForm();
 
     @Before
     public void setupMock() {
@@ -58,11 +59,26 @@ public class FileServiceImplTest {
         file2.setFileId(2L);
         file3.setMetaData(metaData3);
         file3.setFileId(3L);
+
+        fileForm.setUploaded(new Date());
+        fileForm.setFileId(1L);
+        fileForm.setFileName("file1.properties");
+        fileForm.setMetaData1("metaData11");
+        fileForm.setMetaData2("metaData12");
+        fileForm.setMetaData3("metaData13");
+
     }
 
     @Test
-    public void testSaveNew() {
+    public void testSaveNewFile() {
         fileService.saveNew(file1);
+        verify(fileRepository).save(file1);
+    }
+
+    @Test
+    public void testSaveNewFileForm() {
+        when(fileFormToFileConverter.convert(fileForm)).thenReturn(file1);
+        fileService.saveNew(fileForm);
         verify(fileRepository).save(file1);
     }
 
