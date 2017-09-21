@@ -11,16 +11,15 @@
     <link rel="shortcut icon" th:href="@{/static/images/favicon.ico}"/>
 </head>
 <body>
-<div class="header">
+<header class="header">
     <div class="container" th:if="${file == null}">
         <h1 class="header-heading">No result found! Please retry with different File ID.</h1>
     </div>
     <div class="container" th:if="${file != null}" >
         <h1 class="header-heading" th:text="'Update File with ID: ' + ${file.fileId}">Update File with ID: XX</h1>
     </div>
-</div>
-
-<div class="content">
+</header>
+<main class="content">
     <div class="container">
         <h2>File Details</h2>
         <div>
@@ -69,9 +68,9 @@
             </form>
         </div>
     </div>
-</div>
-<div class="footer">
+</main>
+<footer class="footer">
     <div class="container">&copy; Alex Soft 2017</div>
-</div>
+</footer>
 </body>
 </html>

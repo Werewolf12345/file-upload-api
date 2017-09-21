@@ -12,16 +12,15 @@
 <link rel="shortcut icon" th:href="@{/static/images/favicon.ico}" />
 </head>
 <body>
-	<div class="header">
+<header class="header">
 		<div class="container" th:if="${file == null}">
 			<strong class="header-heading" >No result found!</strong> Please retry with different File ID.
 		</div>
 		<div class="container" th:if="${file != null}">
 			<h1 class="header-heading" th:text="'File with ID: ' + ${file.fileId}">File with ID: XX</h1>
 		</div>
-	</div>
-
-	<div class="content">
+</header>
+<main class="content">
 		<div class="container">
 			<div class="main">
 
@@ -79,9 +78,9 @@
 				</p>
 			</div>
 		</div>
-	</div>
-	<div class="footer">
+</main>
+<footer class="footer">
 		<div class="container">&copy; Alex Soft 2017</div>
-	</div>
+</footer>
 </body>
 </html>

@@ -2,7 +2,6 @@ package com.alexboriskin.testapiassignment.controllers;
 
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.services.FileService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,7 @@ public class RestController {
 
     private FileService fileService;
 
-    @Autowired
-    public void setFileService(FileService fileService) {
+    public RestController(FileService fileService) {
         this.fileService = fileService;
     }
 
