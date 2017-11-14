@@ -1,5 +1,6 @@
 package com.alexboriskin.testapiassignment.controllers;
 
+import com.alexboriskin.testapiassignment.exceptions.ThereIsNoFileException;
 import com.alexboriskin.testapiassignment.models.File;
 import com.alexboriskin.testapiassignment.services.FileService;
 import org.springframework.hateoas.Link;
@@ -61,7 +62,7 @@ public class RestController {
         File file = fileService.getById(id);
 
         if (file == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ThereIsNoFileException();
         }
 
         Link selfLink = linkTo(methodOn(RestController.class).getFile(file.getFileId())).withSelfRel();
